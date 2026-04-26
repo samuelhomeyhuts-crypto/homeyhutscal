@@ -1,4 +1,3 @@
- <script>
   function calculate() {
   let finalPrice = parseFloat(document.getElementById('finalPrice').value);
   let platform = document.getElementById('platform').value;
@@ -48,4 +47,3 @@
       "Owner Payout: ₹" + payout.toFixed(2);
   }
 }
-</script>
