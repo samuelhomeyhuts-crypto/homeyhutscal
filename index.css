@@ -98,11 +98,15 @@ button:hover {
   border-bottom: 1px solid #ddd;
 }
 
+/* Highlight payout row in green for all devices */
 .result tr:last-child td {
   border-bottom: none;
   font-weight: bold;
-  color: green; /* highlight payout */
+  color: #fff;
+  background-color: #28a745; /* green background */
+  text-align: center;
 }
+
 
 /* Responsive tweaks */
 @media (max-width: 600px) {
