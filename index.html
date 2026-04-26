@@ -74,18 +74,12 @@
       "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr>" +
       "</table>";
 
-  } else {
-    // Excel GST method for Homeyhuts and Agoda
+  } else if (platform === "homeyhuts") {
+    // Reverse GST method (Final ÷ (1 + GST))
     gstRate = (finalPrice <= 7500) ? 0.05 : 0.18;
-    gstAmount = finalPrice * gstRate;
-    basePrice = finalPrice - gstAmount;
-
-    if (platform === "homeyhuts") {
-      fee = basePrice * 0.14; // 14% service fee
-    } else if (platform === "agoda") {
-      fee = basePrice * 0.10; // 10% service fee
-    }
-
+    basePrice = finalPrice / (1 + gstRate);
+    gstAmount = basePrice * gstRate;
+    fee = basePrice * 0.14; // 14% service fee
     payout = basePrice - fee;
 
     document.getElementById('output').innerHTML =
@@ -93,11 +87,29 @@
       "<tr><td>Final Price:</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
       "<tr><td>Base Price:</td><td>₹" + basePrice.toFixed(2) + "</td></tr>" +
       "<tr><td>GST (" + (gstRate * 100) + "%):</td><td>₹" + gstAmount.toFixed(2) + "</td></tr>" +
-      "<tr><td>Service Fee:</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
+      "<tr><td>Service Fee (14%):</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
+      "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr>" +
+      "</table>";
+
+  } else if (platform === "agoda") {
+    // Excel GST method (GST directly on Final Price)
+    gstRate = (finalPrice <= 7500) ? 0.05 : 0.18;
+    gstAmount = finalPrice * gstRate;
+    basePrice = finalPrice - gstAmount;
+    fee = basePrice * 0.10; // 10% service fee
+    payout = basePrice - fee;
+
+    document.getElementById('output').innerHTML =
+      "<table>" +
+      "<tr><td>Final Price:</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
+      "<tr><td>Base Price:</td><td>₹" + basePrice.toFixed(2) + "</td></tr>" +
+      "<tr><td>GST (" + (gstRate * 100) + "%):</td><td>₹" + gstAmount.toFixed(2) + "</td></tr>" +
+      "<tr><td>Service Fee (10%):</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
       "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr>" +
       "</table>";
   }
 }
+
   </script>
 </body>
 </html>
