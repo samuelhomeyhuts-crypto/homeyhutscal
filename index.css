@@ -22,8 +22,8 @@ body {
 
 .logo {
     display: block;
-    margin: 0 auto 15px auto; /* center logo and add spacing below */
-    max-width: 120px;         /* control logo size */
+    margin: 0 auto 15px auto; /* center logo */
+    max-width: 120px;         /* control size */
 }
 
 h2 {
