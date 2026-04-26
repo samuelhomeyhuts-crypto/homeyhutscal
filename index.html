@@ -75,10 +75,10 @@
       "</table>";
 
   } else if (platform === "homeyhuts") {
-    // Reverse GST method (Final ÷ (1 + GST))
+    // Reverse GST method (Final ÷ (1 + GST), GST = Final − Base)
     gstRate = (finalPrice <= 7500) ? 0.05 : 0.18;
     basePrice = finalPrice / (1 + gstRate);
-    gstAmount = basePrice * gstRate;
+    gstAmount = finalPrice - basePrice; // FIXED
     fee = basePrice * 0.14; // 14% service fee
     payout = basePrice - fee;
 
