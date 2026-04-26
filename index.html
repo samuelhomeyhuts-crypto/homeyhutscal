@@ -33,16 +33,38 @@
   let finalPrice = parseFloat(document.getElementById('finalPrice').value);
   let platform = document.getElementById('platform').value;
 
-  if (isNaN(finalPrice)) {
-    document.getElementById('output').innerText = "Please enter the final price.";
+  if (isNaN(finalPrice) || finalPrice <= 0) {
+    document.getElementById('output').innerText = "Please enter a valid final price.";
     return;
   }
 
-  let basePrice, gstAmount, fee, payout;
+  let basePrice = 0, gstAmount = 0, fee = 0, payout = 0, gstRate = 0;
 
-  if (platform === "direct") {
-    // Direct/Offline booking: only 14% commission
-    fee = finalPrice * 0.14;
+  // Flat commission platforms (no GST/base calculation)
+  if (platform === "mmt") {
+    fee = finalPrice * 0.15; // 15% commission
+    payout = finalPrice - fee;
+
+    document.getElementById('output').innerHTML =
+      "<table>" +
+      "<tr><td>Final Price:</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
+      "<tr><td>Commission (15%):</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
+      "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr>" +
+      "</table>";
+
+  } else if (platform === "airbnb") {
+    fee = finalPrice * 0.10; // 10% commission
+    payout = finalPrice - fee;
+
+    document.getElementById('output').innerHTML =
+      "<table>" +
+      "<tr><td>Final Price:</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
+      "<tr><td>Commission (10%):</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
+      "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr>" +
+      "</table>";
+
+  } else if (platform === "direct") {
+    fee = finalPrice * 0.14; // 14% commission
     payout = finalPrice - fee;
 
     document.getElementById('output').innerHTML =
@@ -53,36 +75,29 @@
       "</table>";
 
   } else {
-    // GST logic: 5% if nightly rate ≤ 7500, else 18%
-    let gst = (finalPrice <= 7500) ? 0.05 : 0.18;
+    // Excel GST method for Homeyhuts and Agoda
+    gstRate = (finalPrice <= 7500) ? 0.05 : 0.18;
+    gstAmount = finalPrice * gstRate;
+    basePrice = finalPrice - gstAmount;
 
-    // Service fee logic per platform
-    let serviceFee;
     if (platform === "homeyhuts") {
-      serviceFee = 0.14;
+      fee = basePrice * 0.14; // 14% service fee
     } else if (platform === "agoda") {
-      serviceFee = 0.10;
-    } else if (platform === "mmt") {
-      serviceFee = 0.15;
-    } else if (platform === "airbnb") {
-      serviceFee = 0.10;
+      fee = basePrice * 0.10; // 10% service fee
     }
 
-    basePrice = finalPrice / (1 + gst);
-    gstAmount = basePrice * gst;
-    fee = basePrice * serviceFee;
     payout = basePrice - fee;
 
     document.getElementById('output').innerHTML =
       "<table>" +
+      "<tr><td>Final Price:</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
       "<tr><td>Base Price:</td><td>₹" + basePrice.toFixed(2) + "</td></tr>" +
-      "<tr><td>GST Amount:</td><td>₹" + gstAmount.toFixed(2) + "</td></tr>" +
+      "<tr><td>GST (" + (gstRate * 100) + "%):</td><td>₹" + gstAmount.toFixed(2) + "</td></tr>" +
       "<tr><td>Service Fee:</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
       "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr>" +
       "</table>";
   }
 }
-
   </script>
 </body>
 </html>
