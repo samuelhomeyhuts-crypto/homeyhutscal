@@ -17,24 +17,11 @@
       <option value="agoda">Agoda</option>
       <option value="mmt">MakeMyTrip</option>
       <option value="airbnb">Airbnb</option>
-      <option value="airbnb_ot">Airbnb OT (Onboarding Team)</option>
       <option value="direct">Homeyhuts Direct/Offline</option>
     </select>
 
     <label>Final Price (Guest Paid):</label>
     <input type="number" id="finalPrice" placeholder="Enter amount">
-
-    <!-- Extra inputs for Airbnb OT -->
-    <div id="airbnbInputs" style="display:none;">
-      <label>Nightly Adjustment:</label>
-      <input type="number" id="nightlyAdjustment" placeholder="Enter adjustment">
-
-      <label>Occupancy Tax:</label>
-      <input type="number" id="occupancyTax" placeholder="Enter occupancy tax">
-
-      <label>Income Tax Withheld:</label>
-      <input type="number" id="incomeTax" placeholder="Enter income tax withheld">
-    </div>
 
     <button onclick="calculate()">Calculate</button>
 
@@ -42,15 +29,6 @@
   </div>
 
   <script>
-    // Show extra fields only when Airbnb OT is selected
-    document.getElementById('platform').addEventListener('change', function() {
-      if (this.value === "airbnb_ot") {
-        document.getElementById('airbnbInputs').style.display = "block";
-      } else {
-        document.getElementById('airbnbInputs').style.display = "none";
-      }
-    });
-
     function calculate() {
       let finalPrice = parseFloat(document.getElementById('finalPrice').value);
       let platform = document.getElementById('platform').value;
@@ -60,7 +38,7 @@
         return;
       }
 
-      let basePrice = 0, gstAmount = 0, fee = 0, payout = 0, gstRate = 0, cohostFee = 0;
+      let basePrice = 0, gstAmount = 0, fee = 0, payout = 0, gstRate = 0;
 
       if (platform === "mmt") {
         fee = finalPrice * 0.15;
@@ -74,47 +52,10 @@
         fee = finalPrice * 0.10;
         payout = finalPrice - fee;
         document.getElementById('output').innerHTML =
-          "<table><tr><td>Final Price:</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
+          "<table><tr><td>Total (INR):</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
           "<tr><td>Commission (10%):</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
           "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr></table>";
 
-      } else if (platform === "airbnb_ot") {
-        // Get dynamic inputs
-        let nightlyAdjustment = parseFloat(document.getElementById('nightlyAdjustment').value) || 0;
-        let occupancyTax = parseFloat(document.getElementById('occupancyTax').value) || 0;
-        let incomeTaxWithheld = parseFloat(document.getElementById('incomeTax').value) || 0;
-
-        // Step 1: Adjusted Room Fee
-        let adjustedRoomFee = finalPrice - nightlyAdjustment;
-
-        // Step 2: Service Fee (15.5%)
-        fee = adjustedRoomFee * 0.155;
-
-        // Step 3: Earnings after service fee
-        let earningsAfterFee = adjustedRoomFee - fee;
-
-        // Step 4: Add occupancy tax
-        let subtotal = earningsAfterFee + occupancyTax;
-
-        // Step 5: Co-host payout (10% of earningsAfterFee)
-        cohostFee = earningsAfterFee * 0.10;
-        subtotal -= cohostFee;
-
-        // Step 6: Deduct income tax withheld
-        payout = subtotal - incomeTaxWithheld;
-
-        document.getElementById('output').innerHTML =
-          "<h3>Airbnb OT (Onboarding Team)</h3>" +
-          "<table>" +
-          "<tr><td>Room Fee:</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
-          "<tr><td>Nightly Adjustment:</td><td>₹-" + nightlyAdjustment.toFixed(2) + "</td></tr>" +
-          "<tr><td>Adjusted Room Fee:</td><td>₹" + adjustedRoomFee.toFixed(2) + "</td></tr>" +
-          "<tr><td>Service Fee (15.5%):</td><td>₹-" + fee.toFixed(2) + "</td></tr>" +
-          "<tr><td>Occupancy Tax:</td><td>₹+" + occupancyTax.toFixed(2) + "</td></tr>" +
-          "<tr><td>Co-host Payout (10%):</td><td>₹-" + cohostFee.toFixed(2) + "</td></tr>" +
-          "<tr><td>Income Tax Withheld:</td><td>₹-" + incomeTaxWithheld.toFixed(2) + "</td></tr>" +
-          "<tr><td><b>Final Owner Payout:</b></td><td><b>₹" + payout.toFixed(2) + "</b></td></tr>" +
-          "</table>";
       } else if (platform === "direct") {
         fee = finalPrice * 0.14;
         payout = finalPrice - fee;
@@ -143,7 +84,7 @@
           "<tr><td>Service Fee (14%):</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
           "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr></table>";
 
-             } else if (platform === "agoda") {
+      } else if (platform === "agoda") {
         gstRate = (finalPrice <= 7500) ? 0.05 : 0.18;
         gstAmount = finalPrice * gstRate;
         basePrice = finalPrice - gstAmount;
@@ -156,7 +97,7 @@
           "<tr><td>Service Fee (10%):</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
           "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr></table>";
       }
-    } // <-- closes calculate()
+    }
   </script>
 </body>
 </html>
