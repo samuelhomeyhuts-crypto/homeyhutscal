@@ -64,26 +64,47 @@
           "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr>" +
           "</table>";
 
-      } else if (platform === "airbnb_ot") {
-        // Airbnb OT (Onboarding Team) detailed breakdown
-        // Example assumptions: 15.5% service fee, 10% co-host payout, occupancy tax 18%
-        gstRate = 0.18;
-        gstAmount = finalPrice * gstRate; // occupancy tax
-        basePrice = finalPrice - gstAmount;
-        fee = basePrice * 0.155; // Airbnb service fee 15.5%
-        cohostFee = basePrice * 0.10; // Co-host payout 10%
-        payout = basePrice - fee - cohostFee;
+      }  else if (platform === "airbnb_ot") {
+  // Airbnb OT (Onboarding Team) detailed breakdown
+  // Assumptions: nightly adjustment provided, service fee 15.5%, co-host 10%, occupancy tax added, income tax withheld
+  let nightlyAdjustment = 10146; // example adjustment, make this dynamic if needed
+  let occupancyTax = 8522.64;    // example tax, make dynamic if needed
+  let incomeTaxWithheld = 47.35; // example withheld, make dynamic if needed
 
-        document.getElementById('output').innerHTML =
-          "<h3>Airbnb OT (Onboarding Team)</h3>" +
-          "<table>" +
-          "<tr><td>Final Price:</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
-          "<tr><td>Base Price:</td><td>₹" + basePrice.toFixed(2) + "</td></tr>" +
-          "<tr><td>Occupancy Tax (GST " + (gstRate * 100) + "%):</td><td>₹" + gstAmount.toFixed(2) + "</td></tr>" +
-          "<tr><td>Service Fee (15.5%):</td><td>₹" + fee.toFixed(2) + "</td></tr>" +
-          "<tr><td>Co-host Payout (10%):</td><td>₹" + cohostFee.toFixed(2) + "</td></tr>" +
-          "<tr><td><b>Owner Payout:</b></td><td><b>₹" + payout.toFixed(2) + "</b></td></tr>" +
-          "</table>";
+  // Step 1: Adjusted Room Fee
+  let adjustedRoomFee = finalPrice - nightlyAdjustment;
+
+  // Step 2: Service Fee (15.5%)
+  fee = adjustedRoomFee * 0.155;
+
+  // Step 3: Subtotal after service fee
+  let subtotal = adjustedRoomFee - fee;
+
+  // Step 4: Add occupancy tax
+  subtotal += occupancyTax;
+
+  // Step 5: Co-host payout (10%)
+  cohostFee = adjustedRoomFee * 0.10;
+
+  // Step 6: Deduct co-host payout
+  subtotal -= cohostFee;
+
+  // Step 7: Deduct income tax withheld
+  payout = subtotal - incomeTaxWithheld;
+
+  document.getElementById('output').innerHTML =
+    "<h3>Airbnb OT (Onboarding Team)</h3>" +
+    "<table>" +
+    "<tr><td>Room Fee:</td><td>₹" + finalPrice.toFixed(2) + "</td></tr>" +
+    "<tr><td>Nightly Adjustment:</td><td>₹-" + nightlyAdjustment.toFixed(2) + "</td></tr>" +
+    "<tr><td>Adjusted Room Fee:</td><td>₹" + adjustedRoomFee.toFixed(2) + "</td></tr>" +
+    "<tr><td>Service Fee (15.5%):</td><td>₹-" + fee.toFixed(2) + "</td></tr>" +
+    "<tr><td>Occupancy Tax:</td><td>₹+" + occupancyTax.toFixed(2) + "</td></tr>" +
+    "<tr><td>Co-host Payout (10%):</td><td>₹-" + cohostFee.toFixed(2) + "</td></tr>" +
+    "<tr><td>Income Tax Withheld:</td><td>₹-" + incomeTaxWithheld.toFixed(2) + "</td></tr>" +
+    "<tr><td><b>Final Owner Payout:</b></td><td><b>₹" + payout.toFixed(2) + "</b></td></tr>" +
+    "</table>";
+
       } else if (platform === "direct") {
         fee = finalPrice * 0.14; // 14% commission
         payout = finalPrice - fee;
