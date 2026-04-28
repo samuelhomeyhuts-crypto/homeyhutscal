@@ -20,7 +20,7 @@
       <option value="direct">Homeyhuts Direct/Offline</option>
     </select>
 
-    <label>Final Price (Guest Paid):</label>
+    <label for="finalPrice" id="priceLabel">Final Price (Guest Paid):</label>
     <input type="number" id="finalPrice" placeholder="Enter amount">
 
     <button onclick="calculate()">Calculate</button>
@@ -29,6 +29,16 @@
   </div>
 
   <script>
+    // Change input label dynamically for Airbnb
+    document.getElementById('platform').addEventListener('change', function() {
+      let label = document.getElementById('priceLabel');
+      if (this.value === "airbnb") {
+        label.innerText = "Total (INR):";
+      } else {
+        label.innerText = "Final Price (Guest Paid):";
+      }
+    });
+
     function calculate() {
       let finalPrice = parseFloat(document.getElementById('finalPrice').value);
       let platform = document.getElementById('platform').value;
