@@ -6,7 +6,25 @@
   <link rel="icon" type="image/png" href="logo.png">
 </head>
 <body>
-  <div class="container">
+<div class="container">
+  <!-- Left side: WhatsApp confirmation format -->
+  <div class="confirmation-box">
+    <h3>WhatsApp Confirmation</h3>
+    <textarea id="confirmationText" readonly>
+Confirmed booking from 
+Property:  
+Guest Name:  
+Phone:  
+Guest Count:  
+Check-in Date:  
+Check-out Date:  
+Payment to property owner:  
+    </textarea>
+    <button onclick="copyConfirmation()">Copy</button>
+  </div>
+
+  <!-- Right side: Calculator -->
+  <div class="calculator-box">
     <!-- Logo -->
     <img src="logo.png" alt="Homeyhuts Logo" class="logo">
 
@@ -28,6 +46,7 @@
 
     <div class="result" id="output"></div>
   </div>
+</div>
 
   <script>
     // Change input label dynamically for Airbnb
