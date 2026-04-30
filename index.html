@@ -49,6 +49,15 @@ Payment to property owner:
 </div>
 
   <script>
+    function copyConfirmation() {
+  let text = document.getElementById("confirmationText");
+  text.select();
+  text.setSelectionRange(0, 99999); // for mobile devices
+  navigator.clipboard.writeText(text.value);
+  alert("Confirmation details copied!");
+}    
+    
+    
     // Change input label dynamically for Airbnb
     document.getElementById('platform').addEventListener('change', function() {
       let label = document.getElementById('priceLabel');
