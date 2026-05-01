@@ -7,9 +7,10 @@
 </head>
 <body>
 <div class="main-container">
-  <!-- Left side: WhatsApp confirmation format -->
+  <!-- Left side: Booking Confirmation Format -->
   <div class="confirmation-box">
     <h3>Booking Confirmation Format</h3>
+    <br>
     <textarea id="confirmationText" readonly>
 Confirmed booking from 
 Property:  
@@ -23,11 +24,9 @@ Payment to property owner:
     <button onclick="copyConfirmation()">Copy</button>
   </div>
 
-  <!-- Right side: Calculator -->
+  <!-- Middle: Calculator -->
   <div class="calculator-box">
-    <!-- Logo -->
     <img src="logo.png" alt="Homeyhuts Logo" class="logo">
-
     <h2>Payout Calculator</h2>
 
     <label>Platform:</label>
@@ -46,14 +45,41 @@ Payment to property owner:
 
     <div class="result" id="output"></div>
   </div>
+
+  <!-- Right side: Payout Explanation Slider -->
+  <div class="slider-box">
+    <h2>Payout Calculation Guide</h2>
+    <div class="slider">
+      <div class="slide active">
+        <h3>Airbnb</h3>
+        <p>Guest pays total → Airbnb and We deducts 10% Homeyhuts service fee → Remaining amount is released to host (usually within 24 hours after check‑in).</p>
+      </div>
+      <div class="slide">
+        <h3>MakeMyTrip</h3>
+        <p>Guest pays total → MakeMyTrip and We deducts 10% Homeyhuts service fee. Payout = Final Price - 15% commission.</p>
+      </div>
+      <div class="slide">
+        <h3>Homeyhuts</h3>
+        <p>Guest pays final price → GST applied (5% if base ≤ ₹7,500, else 18%) → Base Price calculated → 14% service fee deducted → Remaining amount is host payout.</p>
+      </div>
+      <div class="slide">
+        <h3>Agoda</h3>
+        <p>Guest pays final price → GST applied (5% if ≤ ₹7,500, else 18%) → Base Price calculated → 10% service fee deducted → Remaining amount is host payout.</p>
+      </div>
+    </div>
+    <div class="slider-controls">
+      <button onclick="prevSlide()">&#60;</button>
+      <button onclick="nextSlide()">&#62;</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  // Copy function for WhatsApp confirmation
+  // Copy function
   function copyConfirmation() {
     let text = document.getElementById("confirmationText");
     text.select();
-    text.setSelectionRange(0, 99999); // for mobile devices
+    text.setSelectionRange(0, 99999);
     navigator.clipboard.writeText(text.value);
     alert("Confirmation details copied!");
   }
@@ -68,6 +94,7 @@ Payment to property owner:
     }
   });
 
+  // Calculator logic
   function calculate() {
     let finalPrice = parseFloat(document.getElementById('finalPrice').value);
     let platform = document.getElementById('platform').value;
@@ -137,6 +164,30 @@ Payment to property owner:
         "<tr><td>Owner Payout:</td><td>₹" + payout.toFixed(2) + "</td></tr></table>";
     }
   }
+
+  // Slider logic
+  let currentSlide = 0;
+const slides = document.querySelectorAll(".slide");
+
+function showSlide(index) {
+  slides.forEach((slide, i) => {
+    slide.classList.toggle("active", i === index);
+  });
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % slides.length;
+  showSlide(currentSlide);
+}
+
+function prevSlide() {
+  currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+  showSlide(currentSlide);
+}
+
+// Initialize first slide
+showSlide(currentSlide);
+
 </script>
 </body>
 </html>
